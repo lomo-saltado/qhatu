@@ -126,6 +126,15 @@
         .btn-shimmer:hover::after {
             left: 100%;
         }
+
+        /* Page Transition Animations */
+        .transition-curtain {
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+        .transition-curtain.active {
+            transform: translateY(0%);
+        }
     </style>
 </head>
 <body class="bg-cocoa-900 text-cream antialiased overflow-x-hidden">
@@ -224,7 +233,21 @@
             );
         };
 
-        // 2. Navigation Bar
+        // 2. Enhanced "Barba-like" Page Transition Overlay
+        const PageTransition = ({ isExiting }) => (
+            <div className={`fixed inset-0 z-[60] pointer-events-none flex flex-col justify-end`}>
+                {/* Curtain */}
+                <div className={`absolute inset-0 bg-cocoa-900 texture-overlay z-10 transition-curtain ${isExiting ? 'active' : ''} flex items-center justify-center`}>
+                    <div className={`transition-all duration-500 delay-300 ${isExiting ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
+                        <div className="w-20 h-20 rounded-full border border-gold-500 flex items-center justify-center animate-pulse-slow">
+                             <span className="font-serif text-gold-500 text-4xl font-bold">Q</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        // 3. Navigation Bar
         const Navbar = ({ visible }) => {
             const [scrolled, setScrolled] = useState(false);
             const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -245,11 +268,12 @@
                         
                         {/* Desktop Menu */}
                         <div className="hidden md:flex items-center gap-8 font-sans text-sm tracking-widest text-cream/80">
-                            <a href="catalogo.html" className="hover:text-gold-400 transition-colors">COLECCIÓN</a>
-                            <a href="#origin" className="hover:text-gold-400 transition-colors">ORIGEN</a>
-                            <a href="#experience" className="hover:text-gold-400 transition-colors">EXPERIENCIA</a>
+                        
+                            <a href="#origin" className="hover:text-gold-400 transition-colors">Origen</a>
+                            <a href="#experience" className="hover:text-gold-400 transition-colors">experiencia</a>
+                            <a href="historia.html" className="hover:text-gold-400 transition-colors">Sobre nosotros</a>
                             <a href="catalogo.html" className="px-6 py-2 border border-gold-500 text-gold-400 hover:bg-gold-500 hover:text-cocoa-900 transition-all duration-300 rounded-sm">
-                                TIENDA
+                                Colección
                             </a>
                         </div>
 
@@ -271,7 +295,7 @@
             );
         };
 
-        // 3. Product Card Component
+        // 4. Product Card Component
         const ProductCard = ({ title, desc, price, img, delay }) => (
             <div 
                 className="group relative bg-cocoa-800/50 hover:bg-cocoa-800 transition-colors duration-500 overflow-hidden border border-white/5 hover:border-gold-500/30"
@@ -298,7 +322,7 @@
             </div>
         );
 
-        // 4. Feature Section Component
+        // 5. Feature Section Component
         const Feature = ({ icon: Icon, title, desc }) => (
             <div className="flex flex-col items-center text-center p-8 border border-gold-500/10 hover:border-gold-500/30 bg-cocoa-800/20 transition-all duration-300">
                 <div className="mb-4 text-gold-500 p-4 bg-cocoa-800 rounded-full">
@@ -313,9 +337,43 @@
 
         const App = () => {
             const [entered, setEntered] = useState(false);
+            const [isExiting, setIsExiting] = useState(false);
+
+            // Handle smooth transitions for links - mimics Barba.js behavior
+            useEffect(() => {
+                const handleLinkClick = (e) => {
+                    const link = e.target.closest('a');
+                    
+                    if (link) {
+                        const href = link.getAttribute('href');
+                        
+                        // Ignore anchors on same page, empty links, or external links
+                        if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+                        
+                        // Prevent default navigation
+                        e.preventDefault();
+                        
+                        // Start exit animation (Curtain up)
+                        setIsExiting(true);
+                        
+                        // Navigate after animation completes (600ms matches CSS transition)
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 700); 
+                    }
+                };
+
+                document.addEventListener('click', handleLinkClick);
+                
+                // Cleanup
+                return () => document.removeEventListener('click', handleLinkClick);
+            }, []);
 
             return (
                 <div className="min-h-screen">
+                    {/* Page Transition Overlay */}
+                    <PageTransition isExiting={isExiting} />
+
                     {/* Epic Opening Overlay */}
                     <OpeningSequence onEnter={() => setEntered(true)} />
 
