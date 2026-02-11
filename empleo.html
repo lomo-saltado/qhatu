@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carreras | Aurum Cacao</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cocoa: {
+                            900: '#1a0f0a',
+                            800: '#2c1810',
+                            700: '#3e2218',
+                        },
+                        gold: {
+                            300: '#f9e6b6',
+                            400: '#eec075',
+                            500: '#d4af37', 
+                            600: '#aa8c2c',
+                        },
+                        cream: '#fcfbf7'
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a0f0a; }
+        ::-webkit-scrollbar-thumb { background: #3e2218; border-radius: 4px; }
+        
+        .texture-overlay {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="bg-cocoa-900 text-cream antialiased overflow-x-hidden">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Icons
+        const ArrowLeft = ({ size = 20 }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        );
+        const Briefcase = ({ size = 20 }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+        );
+        const CheckCircle = ({ size = 20 }) => (
+             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold-500"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        );
+
+        const Navbar = () => (
+            <nav className="fixed top-0 w-full z-40 bg-cocoa-900/95 backdrop-blur-md py-4 shadow-lg border-b border-gold-900">
+                <div className="container mx-auto px-6 flex justify-between items-center">
+                    <a href="web.html" className="flex items-center gap-2 group">
+                        <ArrowLeft className="text-gold-400 group-hover:-translate-x-1 transition-transform"/>
+                        <span className="text-sm font-sans tracking-widest text-gold-400 group-hover:text-cream transition-colors">VOLVER AL INICIO</span>
+                    </a>
+                    <div className="flex items-center gap-2">
+                         <div className="w-8 h-8 rounded-full bg-gold-500 flex items-center justify-center text-cocoa-900 font-serif font-bold">A</div>
+                    </div>
+                </div>
+            </nav>
+        );
+
+        const CareersApp = () => {
+            return (
+                <div className="min-h-screen texture-overlay pb-20 pt-20">
+                    <Navbar />
+
+                    {/* Section 1: Intro Split Screen */}
+                    <div className="container mx-auto px-6 py-12 md:py-20">
+                        <div className="flex flex-col md:flex-row items-center gap-12 border border-gold-500/20 bg-cocoa-800/40 p-2 md:p-0 overflow-hidden">
+                            
+                            {/* Text Side */}
+                            <div className="w-full md:w-1/2 p-8 md:p-16 text-center md:text-left animate-fade-in-up">
+                                <span className="text-gold-500 uppercase tracking-widest text-xs font-bold mb-4 block">Únete al Equipo</span>
+                                <h1 className="font-serif text-4xl md:text-6xl text-cream mb-6 leading-tight">
+                                    ¿Estás listo para <br/>
+                                    <span className="text-gold-400 italic">saborear el chocolate?</span>
+                                </h1>
+                                <p className="text-cream/70 font-sans leading-relaxed mb-8">
+                                    En Aurum Cacao, no solo hacemos chocolate; creamos experiencias. Buscamos paladares exigentes y espíritus creativos que quieran elevar el estándar mundial de la chocolatería fina.
+                                </p>
+                                <div className="flex gap-4 justify-center md:justify-start">
+                                    <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-gold-300">
+                                        <div className="w-2 h-2 bg-gold-500 rounded-full"></div> Pasión
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-gold-300">
+                                        <div className="w-2 h-2 bg-gold-500 rounded-full"></div> Precisión
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-gold-300">
+                                        <div className="w-2 h-2 bg-gold-500 rounded-full"></div> Arte
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Image Side */}
+                            <div className="w-full md:w-1/2 h-64 md:h-[500px] relative">
+                                <img 
+                                    src="https://images.unsplash.com/photo-1623243166579-224422e66657?q=80&w=2070&auto=format&fit=crop" 
+                                    alt="Saboreando chocolate" 
+                                    className="absolute inset-0 w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-cocoa-900/20"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Section 2: Job Listing */}
+                    <div className="container mx-auto px-6 max-w-4xl">
+                        <h2 className="text-3xl font-serif text-center mb-12 text-cream">Vacantes Disponibles</h2>
+
+                        <div className="bg-cocoa-800 border border-gold-500/30 p-8 md:p-10 relative group hover:border-gold-500 transition-colors duration-300">
+                            <div className="absolute top-0 right-0 bg-gold-500 text-cocoa-900 px-4 py-1 text-xs font-bold uppercase">Abierto ahora</div>
+                            
+                            <div className="flex items-start gap-4 mb-6">
+                                <div className="p-3 bg-cocoa-900 rounded-full text-gold-500 border border-gold-500/20">
+                                    <Briefcase size={24} />
+                                </div>
+                                <div>
+                                    <h3 className="text-2xl font-serif text-gold-200">Maestro Catador de Chocolate</h3>
+                                    <p className="text-cream/50 text-sm font-sans mt-1">Madrid, España • Tiempo Completo • Presencial</p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-6 text-cream/80 font-sans text-sm leading-relaxed mb-8 border-t border-white/10 pt-6">
+                                <p>
+                                    Buscamos un "Sommelier del Cacao" con una nariz excepcional y un paladar entrenado para liderar nuestro control de calidad sensorial. Serás el guardián del sabor de Aurum.
+                                </p>
+                                
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <h4 className="text-gold-400 font-bold uppercase text-xs mb-3">Responsabilidades:</h4>
+                                        <ul className="space-y-2">
+                                            <li className="flex gap-2"><CheckCircle size={16}/> Evaluar perfiles de tueste diarios.</li>
+                                            <li className="flex gap-2"><CheckCircle size={16}/> Desarrollar nuevos maridajes (vinos, licores).</li>
+                                            <li className="flex gap-2"><CheckCircle size={16}/> Detectar matices sutiles en lotes de origen único.</li>
+                                        </ul>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-gold-400 font-bold uppercase text-xs mb-3">Requisitos:</h4>
+                                        <ul className="space-y-2">
+                                            <li className="flex gap-2"><CheckCircle size={16}/> 5+ años de experiencia en chocolatería o enología.</li>
+                                            <li className="flex gap-2"><CheckCircle size={16}/> Certificación sensorial (preferible).</li>
+                                            <li className="flex gap-2"><CheckCircle size={16}/> Pasión obsesiva por el detalle.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button className="w-full bg-transparent border border-gold-500 text-gold-500 py-4 hover:bg-gold-500 hover:text-cocoa-900 transition-all font-sans font-bold tracking-widest uppercase text-sm">
+                                Aplicar a esta posición
+                            </button>
+                        </div>
+                    </div>
+
+                    <footer className="text-center mt-20 text-cream/30 text-xs">
+                        <p>¿No ves tu puesto ideal? Envíanos tu CV a <span className="text-gold-500/50">talento@aurumcacao.com</span></p>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<CareersApp />);
+    </script>
+</body>
+</html>

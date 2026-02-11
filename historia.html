@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestra Historia | Aurum Cacao</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cocoa: {
+                            900: '#1a0f0a',
+                            800: '#2c1810',
+                            700: '#3e2218',
+                        },
+                        gold: {
+                            300: '#f9e6b6',
+                            400: '#eec075',
+                            500: '#d4af37', 
+                            600: '#aa8c2c',
+                        },
+                        cream: '#fcfbf7'
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 1s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { transform: 'translateY(30px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a0f0a; }
+        ::-webkit-scrollbar-thumb { background: #3e2218; border-radius: 4px; }
+        
+        .texture-overlay {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .image-hover-zoom {
+            overflow: hidden;
+        }
+        .image-hover-zoom img {
+            transition: transform 0.7s ease;
+        }
+        .image-hover-zoom:hover img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-cocoa-900 text-cream antialiased overflow-x-hidden">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Icons
+        const ArrowLeft = ({ size = 20 }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        );
+
+        const Navbar = () => (
+            <nav className="fixed top-0 w-full z-40 bg-cocoa-900/95 backdrop-blur-md py-4 shadow-lg border-b border-gold-900">
+                <div className="container mx-auto px-6 flex justify-between items-center">
+                    <a href="web.html" className="flex items-center gap-2 group">
+                        <ArrowLeft className="text-gold-400 group-hover:-translate-x-1 transition-transform"/>
+                        <span className="text-sm font-sans tracking-widest text-gold-400 group-hover:text-cream transition-colors">VOLVER AL INICIO</span>
+                    </a>
+                    <div className="flex items-center gap-2">
+                         <div className="w-8 h-8 rounded-full bg-gold-500 flex items-center justify-center text-cocoa-900 font-serif font-bold">A</div>
+                    </div>
+                </div>
+            </nav>
+        );
+
+        const HistoryApp = () => {
+            return (
+                <div className="min-h-screen texture-overlay pb-20 pt-20">
+                    <Navbar />
+
+                    {/* Section 1: Hero & Story */}
+                    <div className="container mx-auto px-6 py-12">
+                        <div className="text-center mb-16 animate-fade-in-up">
+                            <span className="text-gold-500 uppercase tracking-widest text-xs font-bold mb-4 block">Desde 1924</span>
+                            <h1 className="font-serif text-5xl md:text-7xl text-cream mb-6">El Legado <span className="text-gold-400 italic">Aurum</span></h1>
+                            <div className="h-1 w-24 bg-gold-500 mx-auto mb-8"></div>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-16 items-center max-w-6xl mx-auto mb-32 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                            <div className="prose prose-invert prose-lg text-cream/80 font-sans leading-relaxed">
+                                <p className="mb-6 first-letter:text-5xl first-letter:font-serif first-letter:text-gold-500 first-letter:mr-2 first-letter:float-left">
+                                    Nacidos bajo la sombra del volcán, nuestra historia comenzó hace tres generaciones con una promesa simple: respetar la tierra. Don Aurelio, nuestro fundador, descubrió un pequeño valle olvidado donde los árboles de cacao Criollo ancestral sobrevivían en estado salvaje.
+                                </p>
+                                <p>
+                                    En un mundo obsesionado con la producción masiva, Aurum eligió el camino difícil: la paciencia. Cosechamos solo cuando la naturaleza lo dicta, fermentamos en maderas nobles y tostamos cada lote como si fuera el único. No vendemos chocolate; compartimos un pedazo de nuestra historia familiar, preservada en oro.
+                                </p>
+                            </div>
+                            <div className="relative">
+                                <div className="absolute top-4 left-4 w-full h-full border border-gold-500/30 z-0"></div>
+                                <img 
+                                    src="https://images.unsplash.com/photo-1548691069-7c4d59bc3938?q=80&w=1887&auto=format&fit=crop" 
+                                    alt="Fundador Aurum" 
+                                    className="relative z-10 w-full h-auto shadow-2xl sepia-[.2] grayscale-[.5]"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Section 2: Mission & Vision */}
+                        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mb-32">
+                            {/* Mission Card */}
+                            <div className="bg-cocoa-800/50 p-12 border border-gold-500/20 text-center hover:border-gold-500/50 transition-colors duration-500 group">
+                                <h3 className="font-serif text-3xl text-gold-200 mb-6 group-hover:text-gold-400 transition-colors">Nuestra Misión</h3>
+                                <p className="text-cream/70 font-sans italic text-lg">
+                                    "Redefinir la experiencia del chocolate mediante la pureza inquebrantable y la artesanía obsesiva, elevando cada grano a su máxima expresión de arte comestible."
+                                </p>
+                            </div>
+                            
+                            {/* Vision Card */}
+                            <div className="bg-cocoa-800/50 p-12 border border-gold-500/20 text-center hover:border-gold-500/50 transition-colors duration-500 group">
+                                <h3 className="font-serif text-3xl text-gold-200 mb-6 group-hover:text-gold-400 transition-colors">Nuestra Visión</h3>
+                                <p className="text-cream/70 font-sans italic text-lg">
+                                    "Ser el referente mundial del lujo sostenible, inspirando momentos de transcendencia sensorial en cada rincón del mundo, mientras honramos la tierra que nos da vida."
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Section 3: Gallery */}
+                        <div className="max-w-6xl mx-auto">
+                            <h2 className="text-3xl font-serif text-center mb-12 text-cream">El Proceso en Imágenes</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div className="image-hover-zoom h-80 relative group">
+                                    <img src="https://images.unsplash.com/photo-1614088685112-0a760b7163dc?q=80&w=2069&auto=format&fit=crop" className="w-full h-full object-cover" alt="Proceso 1" />
+                                    <div className="absolute inset-0 bg-cocoa-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <span className="text-gold-400 font-serif tracking-widest uppercase">Selección</span>
+                                    </div>
+                                </div>
+                                <div className="image-hover-zoom h-80 relative group md:-mt-8">
+                                    <img src="https://images.unsplash.com/photo-1623243166579-224422e66657?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover" alt="Proceso 2" />
+                                    <div className="absolute inset-0 bg-cocoa-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <span className="text-gold-400 font-serif tracking-widest uppercase">Cata</span>
+                                    </div>
+                                </div>
+                                <div className="image-hover-zoom h-80 relative group">
+                                    <img src="https://images.unsplash.com/photo-1599599810769-bcde5a45ddb3?q=80&w=2072&auto=format&fit=crop" className="w-full h-full object-cover" alt="Proceso 3" />
+                                    <div className="absolute inset-0 bg-cocoa-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <span className="text-gold-400 font-serif tracking-widest uppercase">Artesanía</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <footer className="text-center mt-20 text-cream/30 text-xs border-t border-gold-900/30 pt-8">
+                        <p>© 2024 Aurum Cacao. La historia continúa.</p>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<HistoryApp />);
+    </script>
+</body>
+</html>
