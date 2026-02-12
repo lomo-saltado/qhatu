@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postular | Qhatu Cacao</title>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cocoa: {
+                            900: '#1a0f0a',
+                            800: '#2c1810',
+                            700: '#3e2218',
+                        },
+                        gold: {
+                            300: '#f9e6b6',
+                            400: '#eec075',
+                            500: '#d4af37', 
+                            600: '#aa8c2c',
+                        },
+                        cream: '#fcfbf7'
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin': 'spin 1s linear infinite',
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a0f0a; }
+        ::-webkit-scrollbar-thumb { background: #3e2218; border-radius: 4px; }
+        
+        .texture-overlay {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* Page Transition Animations */
+        .transition-curtain {
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+        .transition-curtain.active {
+            transform: translateY(0%);
+        }
+    </style>
+</head>
+<body class="bg-cocoa-900 text-cream antialiased overflow-x-hidden">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- ICONS ---
+        const ArrowLeft = ({ size = 20, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        );
+        const HomeIcon = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        );
+        const GridIcon = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        );
+        const MapPinIcon = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        );
+        const ShoppingBagIcon = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+        );
+        const CheckCircle = ({ size = 24, className = "" }) => (
+             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        );
+        const UploadIcon = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        );
+        const SpinnerIcon = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`animate-spin ${className}`}><line x1="12" y1="2" x2="12" y2="6"></line><line x1="12" y1="18" x2="12" y2="22"></line><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"></line><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"></line><line x1="2" y1="12" x2="6" y2="12"></line><line x1="18" y1="12" x2="22" y2="12"></line><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"></line><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"></line></svg>
+        );
+
+        // --- COMPONENTS ---
+
+        const PageTransition = ({ isExiting }) => (
+            <div className={`fixed inset-0 z-[60] pointer-events-none flex flex-col justify-end`}>
+                <div className={`absolute inset-0 bg-cocoa-900 texture-overlay z-10 transition-curtain ${isExiting ? 'active' : ''} flex items-center justify-center`}>
+                    <div className={`transition-all duration-500 delay-300 ${isExiting ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
+                        <div className="w-20 h-20 rounded-full border border-gold-500 flex items-center justify-center animate-pulse-slow">
+                             <span className="font-serif text-gold-500 text-4xl font-bold">Q</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        const Navbar = () => {
+            const [scrolled, setScrolled] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 50);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            return (
+                <>
+                    <nav className={`fixed top-0 w-full z-40 transition-all duration-500 ${scrolled ? 'bg-cocoa-900/95 backdrop-blur-md py-4 shadow-lg border-b border-gold-900' : 'bg-transparent py-6'}`}>
+                        <div className="container mx-auto px-6 flex justify-between items-center">
+                            <a href="web.html" className="flex items-center gap-3 cursor-pointer group">
+                                 <div className="w-10 h-10 rounded-full bg-gold-500 flex items-center justify-center text-cocoa-900 font-serif font-bold text-xl shadow-lg border border-gold-300 group-hover:scale-105 transition-transform">Q</div>
+                                 <span className="text-xl md:text-2xl font-serif font-bold tracking-widest text-gold-400 group-hover:text-cream transition-colors">QHATU</span>
+                            </a>
+                            
+                            <div className="hidden md:flex items-center gap-8 font-sans text-sm tracking-widest text-cream/80">
+                                <a href="web.html" className="hover:text-gold-400 transition-colors">INICIO</a>
+                                <a href="catalogo.html" className="hover:text-gold-400 transition-colors">COLECCIÓN</a>
+                                <a href="empleo.html" className="text-gold-400 font-bold transition-colors">EMPLEO</a>
+                                <a href="historia.html" className="hover:text-gold-400 transition-colors">HISTORIA</a>
+                                <a href="#" className="px-6 py-2 bg-gold-500 text-cocoa-900 hover:bg-gold-400 transition-all duration-300 rounded-sm font-bold flex items-center gap-2">
+                                    CARRITO <span className="bg-cocoa-900 text-gold-500 text-[10px] w-4 h-4 flex items-center justify-center rounded-full">0</span>
+                                </a>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div className="md:hidden fixed bottom-0 left-0 w-full z-50 bg-cocoa-900/95 backdrop-blur-md border-t border-gold-900/50 pb-4 pt-3 px-6 shadow-[0_-5px_20px_rgba(0,0,0,0.4)]">
+                        <div className="flex justify-between items-end">
+                            <a href="web.html" className="flex flex-col items-center gap-1 text-gold-400/60 hover:text-gold-400 transition-colors group">
+                                <HomeIcon size={22} className="group-hover:scale-110 transition-transform"/>
+                                <span className="text-[10px] font-sans tracking-widest uppercase">Inicio</span>
+                            </a>
+                            <a href="catalogo.html" className="flex flex-col items-center gap-1 text-gold-400/60 hover:text-gold-400 transition-colors group">
+                                <GridIcon size={22} className="group-hover:scale-110 transition-transform"/>
+                                <span className="text-[10px] font-sans tracking-widest uppercase">Colección</span>
+                            </a>
+                            <a href="empleo.html" className="flex flex-col items-center gap-1 text-gold-500 transition-colors group">
+                                <MapPinIcon size={22} className="scale-110"/>
+                                <span className="text-[10px] font-sans tracking-widest uppercase font-bold">Empleo</span>
+                            </a>
+                             <a href="#" className="flex flex-col items-center gap-1 text-gold-500 hover:text-white transition-colors relative group">
+                                 <div className="bg-gold-500 text-cocoa-900 p-3 rounded-full -mt-10 shadow-[0_4px_15px_rgba(212,175,55,0.4)] border-4 border-cocoa-900 group-hover:scale-110 transition-transform relative">
+                                    <ShoppingBagIcon size={24} />
+                                    <span className="absolute -top-1 -right-1 bg-cocoa-900 text-gold-500 text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center border border-gold-500">0</span>
+                                </div>
+                                <span className="text-[10px] font-sans tracking-widest uppercase font-bold">Cesta</span>
+                            </a>
+                        </div>
+                    </div>
+                </>
+            );
+        };
+
+        const ApplicationApp = () => {
+            const [isExiting, setIsExiting] = useState(false);
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            const [isSuccess, setIsSuccess] = useState(false);
+            const [fileName, setFileName] = useState("");
+
+            useEffect(() => {
+                const handleLinkClick = (e) => {
+                    const link = e.target.closest('a');
+                    if (link) {
+                        const href = link.getAttribute('href');
+                        if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+                        e.preventDefault();
+                        setIsExiting(true);
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 700); 
+                    }
+                };
+
+                document.addEventListener('click', handleLinkClick);
+                return () => document.removeEventListener('click', handleLinkClick);
+            }, []);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                setIsSubmitting(true);
+                
+                // Simulamos el envío del formulario al correo y al servidor
+                setTimeout(() => {
+                    setIsSubmitting(false);
+                    setIsSuccess(true);
+                }, 2500); // 2.5 segundos de carga animada
+            };
+
+            const handleFileChange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    setFileName(file.name);
+                } else {
+                    setFileName("");
+                }
+            };
+
+            return (
+                <div className="min-h-screen texture-overlay pb-24 md:pb-20 pt-24 md:pt-32">
+                    <PageTransition isExiting={isExiting} />
+                    <Navbar />
+
+                    <div className="container mx-auto px-6 max-w-3xl">
+                        <div className="mb-8">
+                            <a href="empleo.html" className="inline-flex items-center gap-2 text-gold-400 hover:text-cream transition-colors text-sm font-sans uppercase tracking-widest">
+                                <ArrowLeft size={16} /> Volver a Vacantes
+                            </a>
+                        </div>
+
+                        <div className="bg-cocoa-800/80 border border-gold-500/20 p-8 md:p-12 shadow-2xl relative overflow-hidden backdrop-blur-sm">
+                            {/* Decoración sutil */}
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-gold-500/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+
+                            {isSuccess ? (
+                                /* Pantalla de Éxito */
+                                <div className="text-center py-12 animate-fade-in-up">
+                                    <div className="w-24 h-24 mx-auto bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
+                                        <CheckCircle size={48} />
+                                    </div>
+                                    <h2 className="text-3xl md:text-4xl font-serif text-cream mb-4">¡Información enviada con éxito!</h2>
+                                    <p className="text-cream/70 font-sans mb-8 leading-relaxed max-w-md mx-auto">
+                                        Hemos recibido tu CV y tus datos. Nuestro equipo de talento revisará tu perfil y nos pondremos en contacto contigo pronto al correo y celular que proporcionaste.
+                                    </p>
+                                    <a href="web.html" className="inline-block bg-gold-500 text-cocoa-900 px-10 py-4 font-sans font-bold tracking-wider hover:bg-white transition-colors duration-300 uppercase text-sm">
+                                        Volver al Inicio
+                                    </a>
+                                </div>
+                            ) : (
+                                /* Formulario de Aplicación */
+                                <div className="animate-fade-in-up">
+                                    <div className="mb-10 text-center md:text-left">
+                                        <h1 className="text-3xl md:text-4xl font-serif text-cream mb-2">Postular a <span className="text-gold-400 italic">Catador</span></h1>
+                                        <p className="text-cream/60 font-sans text-sm">Por favor, completa tus datos para aplicar a esta posición en Qhatu Cacao.</p>
+                                    </div>
+
+                                    <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                                        <div className="grid md:grid-cols-2 gap-6">
+                                            {/* Nombres */}
+                                            <div className="space-y-2">
+                                                <label className="block text-gold-400 text-xs font-bold uppercase tracking-widest">Nombres *</label>
+                                                <input 
+                                                    type="text" 
+                                                    required 
+                                                    placeholder="."
+                                                    className="w-full bg-cocoa-900/50 border border-white/10 p-4 outline-none focus:border-gold-500 transition-colors text-cream placeholder-gray-600 font-sans"
+                                                />
+                                            </div>
+
+                                            {/* Apellidos */}
+                                            <div className="space-y-2">
+                                                <label className="block text-gold-400 text-xs font-bold uppercase tracking-widest">Apellidos *</label>
+                                                <input 
+                                                    type="text" 
+                                                    required 
+                                                    placeholder=""
+                                                    className="w-full bg-cocoa-900/50 border border-white/10 p-4 outline-none focus:border-gold-500 transition-colors text-cream placeholder-gray-600 font-sans"
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="grid md:grid-cols-2 gap-6">
+                                            {/* Correo */}
+                                            <div className="space-y-2">
+                                                <label className="block text-gold-400 text-xs font-bold uppercase tracking-widest">Correo Electrónico *</label>
+                                                <input 
+                                                    type="email" 
+                                                    required 
+                                                    placeholder="tucorreo@ejemplo.com"
+                                                    className="w-full bg-cocoa-900/50 border border-white/10 p-4 outline-none focus:border-gold-500 transition-colors text-cream placeholder-gray-600 font-sans"
+                                                />
+                                            </div>
+
+                                            {/* Celular Perú */}
+                                            <div className="space-y-2">
+                                                <label className="block text-gold-400 text-xs font-bold uppercase tracking-widest">Celular</label>
+                                                <div className="flex bg-cocoa-900/50 border border-white/10 focus-within:border-gold-500 transition-colors">
+                                                    <span className="flex items-center px-4 border-r border-white/10 text-cream/70 font-sans bg-cocoa-900">+51</span>
+                                                    <input 
+                                                        type="tel" 
+                                                        pattern="[0-9]{9}" 
+                                                        placeholder="999 999 999" 
+                                                        title="Ingresa un número válido de 9 dígitos"
+                                                        required 
+                                                        className="w-full bg-transparent p-4 outline-none text-cream placeholder-gray-600 font-sans"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Subir CV */}
+                                        <div className="space-y-2 pt-4">
+                                            <label className="block text-gold-400 text-xs font-bold uppercase tracking-widest mb-4">Currículum Vitae (CV) *</label>
+                                            
+                                            <label className="border-2 border-dashed border-gold-500/30 hover:border-gold-500 transition-colors p-10 flex flex-col items-center justify-center cursor-pointer bg-cocoa-900/40 relative group">
+                                                <UploadIcon size={36} className="text-gold-400 mb-4 group-hover:-translate-y-2 transition-transform duration-300" />
+                                                <span className="text-cream/80 font-sans text-sm md:text-base mb-2">
+                                                    {fileName ? 'Archivo seleccionado:' : 'Haz clic para subir tu documento'}
+                                                </span>
+                                                {fileName ? (
+                                                    <span className="text-gold-400 font-bold font-sans text-sm">{fileName}</span>
+                                                ) : (
+                                                    <span className="text-cream/40 font-sans text-xs">Aceptamos PDF, DOC o DOCX (Máx. 5MB)</span>
+                                                )}
+                                                <input 
+                                                    type="file" 
+                                                    className="hidden" 
+                                                    accept=".pdf,.doc,.docx" 
+                                                    required 
+                                                    onChange={handleFileChange}
+                                                />
+                                            </label>
+                                        </div>
+
+                                        {/* Botón Enviar */}
+                                        <div className="pt-8">
+                                            <button 
+                                                type="submit" 
+                                                disabled={isSubmitting}
+                                                className={`w-full py-4 font-sans font-bold tracking-widest uppercase text-sm transition-all duration-300 flex items-center justify-center gap-2 ${
+                                                    isSubmitting 
+                                                    ? 'bg-cocoa-900 border border-gold-500/50 text-gold-500/50 cursor-not-allowed' 
+                                                    : 'bg-gold-500 text-cocoa-900 hover:bg-white border border-transparent shadow-[0_0_20px_rgba(212,175,55,0.2)]'
+                                                }`}
+                                            >
+                                                {isSubmitting ? (
+                                                    <><SpinnerIcon size={18} /> Enviando información...</>
+                                                ) : (
+                                                    'Enviar Aplicación'
+                                                )}
+                                            </button>
+                                            <p className="text-center text-cream/30 text-[10px] mt-4 uppercase tracking-wider">
+                                                Tus datos están seguros y serán utilizados exclusivamente para fines de reclutamiento.
+                                            </p>
+                                        </div>
+                                    </form>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ApplicationApp />);
+    </script>
+</body>
+</html>
