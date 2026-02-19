@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sobre Nosotros — Cacao & Co.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cacao:    #2C1810;
+    --dark:     #3D2210;
+    --gold:     #C8964A;
+    --cream:    #F5EDD6;
+    --glass-bg: rgba(255,255,255,0.06);
+    --glass-border: rgba(200,150,74,0.25);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--dark);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    overflow-x: hidden;
+    min-height: 300vh;
+  }
+
+  /* HERO */
+  .hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(200,150,74,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(212,149,106,0.08) 0%, transparent 60%);
+  }
+  .brand-label {
+    font-weight: 300;
+    font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.4rem;
+    opacity: 0;
+    animation: fadeUp 1s 0.3s forwards;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 400;
+    line-height: 1.1;
+    text-align: center;
+    opacity: 0;
+    animation: fadeUp 1s 0.6s forwards;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold); }
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(200,150,74,0.5);
+    opacity: 0;
+    animation: fadeUp 1s 1.2s forwards, pulse 2s 2.2s infinite;
+  }
+
+  /* SCROLL TRACK */
+  .scroll-track { height: 250vh; position: relative; }
+
+  /* STICKY SCENE */
+  .scene-wrapper {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 10;
+  }
+  .scene { perspective: 1400px; width: 100%; display: flex; align-items: center; justify-content: center; }
+
+  /* BAR */
+  .bar-container {
+    width: min(1200px, 97vw);
+    height: min(540px, 50vw);
+    position: relative;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .bar-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
+  /* FRONT */
+  .bar-front {
+    background: linear-gradient(145deg, #3D2010 0%, #5A3020 30%, #2C1810 70%, #1E0E08 100%);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.75), 0 0 0 1px rgba(200,150,74,0.15), inset 0 1px 0 rgba(255,200,120,0.1);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 5px;
+    padding: 16px;
+  }
+  .square {
+    background: linear-gradient(135deg, #4A2A14 0%, #3A1E0C 50%, #2A140A 100%);
+    border-radius: 6px;
+    position: relative;
+    box-shadow: inset 0 1px 0 rgba(255,190,100,0.07), inset 0 -1px 0 rgba(0,0,0,0.4);
+  }
+  .square::after {
+    content: '';
+    position: absolute;
+    top: 20%; left: 15%;
+    width: 25%; height: 20%;
+    background: rgba(255,200,130,0.07);
+    border-radius: 2px;
+    transform: rotate(-10deg);
+  }
+  .bar-front .flare {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,200,120,0.05) 0%, transparent 50%);
+    border-radius: 18px; pointer-events: none;
+  }
+
+  /* BACK */
+  .bar-back {
+    transform: rotateX(180deg);
+    background: linear-gradient(135deg, rgba(18,10,6,0.98) 0%, rgba(34,18,8,0.98) 100%);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.75), 0 0 50px rgba(200,150,74,0.06);
+    padding: 18px 16px 14px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bar-back::-webkit-scrollbar { width: 3px; height: 3px; }
+  .bar-back::-webkit-scrollbar-thumb { background: rgba(200,150,74,0.3); border-radius: 3px; }
+
+  .org-tree {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 1120px;
+    font-family: 'Cormorant Garamond', serif;
+    transform: scale(0.88);
+    transform-origin: top center;
+  }
+  .v-line {
+    width: 1px; height: 12px;
+    background: linear-gradient(to bottom, rgba(200,150,74,0.5), rgba(200,150,74,0.1));
+    margin: 0 auto;
+  }
+  .org-node {
+    border: 1px solid var(--glass-border);
+    border-radius: 7px;
+    padding: 6px 10px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    transition: border-color 0.3s, background 0.3s;
+    flex-shrink: 0;
+  }
+  .org-node:hover { background: rgba(200,150,74,0.1); border-color: rgba(200,150,74,0.5); }
+  .org-node.n1 { background: rgba(200,150,74,0.2); border-color: rgba(200,150,74,0.6); width: 140px; }
+  .org-node.n2 { background: rgba(200,150,74,0.12); border-color: rgba(200,150,74,0.4); width: 135px; }
+  .org-node.n3 { background: var(--glass-bg); width: 130px; }
+  .org-node.n4 { background: rgba(255,255,255,0.03); width: 118px; }
+  .org-node .role {
+    display: block;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+  .org-node .name {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.92rem;
+    color: var(--cream);
+    line-height: 1.3;
+  }
+  .org-node .name.u { color: rgba(245,237,214,0.35); font-style: italic; font-size: 0.8rem; }
+
+  .dept-row {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .dept-col { display: flex; flex-direction: column; align-items: center; }
+
+  .split2 {
+    display: flex;
+    align-items: flex-end;
+    height: 10px;
+    width: 246px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .split2::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 62px; right: 62px;
+    height: 1px;
+    background: rgba(200,150,74,0.3);
+  }
+  .split2::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 62px;
+    width: 1px; height: 5px;
+    background: rgba(200,150,74,0.3);
+  }
+  .split2 .tick-r {
+    position: absolute;
+    bottom: 0; right: 62px;
+    width: 1px; height: 5px;
+    background: rgba(200,150,74,0.3);
+  }
+  .children2 { display: flex; gap: 6px; }
+
+  .top-hbar {
+    height: 10px;
+    width: 1080px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .top-hbar::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 65px; right: 65px;
+    height: 1px;
+    background: rgba(200,150,74,0.35);
+  }
+
+  /* SIDES */
+  .bar-top {
+    position: absolute;
+    width: 100%; height: 20px;
+    top: -10px; left: 0;
+    transform-origin: bottom;
+    transform: rotateX(-90deg);
+    backface-visibility: hidden;
+    border-radius: 18px 18px 0 0;
+    background: linear-gradient(to right, #4A2810, #3A1E0C, #4A2810);
+  }
+  .bar-bottom {
+    position: absolute;
+    width: 100%; height: 20px;
+    bottom: -10px; left: 0;
+    transform-origin: top;
+    transform: rotateX(90deg);
+    backface-visibility: hidden;
+    border-radius: 0 0 18px 18px;
+    background: linear-gradient(to right, #1E0E06, #2A1408, #1E0E06);
+  }
+
+  /* INFO STRIP */
+  .info-strip {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1.2rem;
+    padding: 0.8rem 1.8rem;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 60px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.6s;
+    pointer-events: none;
+  }
+  .info-strip.visible { opacity: 1; }
+  .info-strip span { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,237,214,0.55); }
+  .info-strip span strong { color: var(--gold); font-weight: 400; }
+
+  /* ABOUT TEXT */
+  .about-text {
+    padding: 8rem 2rem 6rem;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s, transform 0.8s;
+  }
+  .about-text.visible { opacity: 1; transform: translateY(0); }
+  .about-text p { font-size: clamp(1.1rem, 2vw, 1.35rem); line-height: 1.9; font-weight: 300; color: rgba(245,237,214,0.8); margin-bottom: 1.5rem; }
+  .about-text p em { color: var(--gold); font-style: italic; }
+
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 100;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 200px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 0.4; } 50% { opacity: 0.9; }
+  }
+
+  /* ── MOF SECTION ── */
+  .mof-section {
+    padding: 4rem 2rem 8rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .mof-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s, transform 0.8s;
+  }
+  .mof-header.visible { opacity: 1; transform: translateY(0); }
+  .mof-header .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .mof-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 400;
+    color: var(--cream);
+    line-height: 1.15;
+  }
+  .mof-header h2 em { font-style: italic; color: var(--gold); }
+  .mof-header .subtitle {
+    display: block;
+    margin-top: 0.8rem;
+    font-size: 1rem;
+    color: rgba(245,237,214,0.45);
+    letter-spacing: 0.05em;
+  }
+  .mof-divider {
+    width: 60px; height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 1.4rem auto 0;
+  }
+
+  /* grid */
+  .mof-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.4rem;
+  }
+  @media (max-width: 900px) { .mof-grid { grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 560px) { .mof-grid { grid-template-columns: 1fr; } }
+
+  /* featured top row (Gerente + Subgerente) */
+  .mof-card.featured {
+    grid-column: span 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    padding: 2.2rem 2.4rem;
+  }
+  @media (max-width: 900px) { .mof-card.featured { grid-column: span 2; } }
+  @media (max-width: 560px) { .mof-card.featured { grid-column: span 1; display: block; } }
+
+  .mof-card.featured .mof-card-left { display: flex; flex-direction: column; }
+  .mof-card.featured .mof-card-right { border-left: 1px solid rgba(200,150,74,0.15); padding-left: 2.5rem; }
+
+  /* base card */
+  .mof-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(200,150,74,0.18);
+    border-radius: 16px;
+    padding: 1.8rem 1.6rem;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity 0.7s, transform 0.7s, border-color 0.3s, background 0.3s;
+  }
+  .mof-card.visible { opacity: 1; transform: translateY(0); }
+  .mof-card:hover { background: rgba(200,150,74,0.07); border-color: rgba(200,150,74,0.38); }
+  .mof-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 110px; height: 110px;
+    background: radial-gradient(circle, rgba(200,150,74,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .mof-card-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 400;
+    color: rgba(200,150,74,0.13);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+    display: block;
+  }
+  .mof-card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--cream);
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+  .mof-card-role {
+    font-size: 0.65rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 1.1rem;
+  }
+  .mof-card-mission {
+    font-size: 0.9rem;
+    line-height: 1.75;
+    color: rgba(245,237,214,0.6);
+    font-style: italic;
+    margin-bottom: 1.2rem;
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid rgba(200,150,74,0.14);
+  }
+  .mof-card-functions-title {
+    font-size: 0.6rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: rgba(200,150,74,0.65);
+    display: block;
+    margin-bottom: 0.7rem;
+  }
+  .mof-card-functions { list-style: none; }
+  .mof-card-functions li {
+    padding: 0.42rem 0 0.42rem 1.2rem;
+    font-size: 0.86rem;
+    line-height: 1.6;
+    color: rgba(245,237,214,0.72);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    position: relative;
+  }
+  .mof-card-functions li:last-child { border-bottom: none; }
+  .mof-card-functions li::before {
+    content: '◆';
+    position: absolute;
+    left: 0; top: 0.62rem;
+    font-size: 0.32rem;
+    color: var(--gold);
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <span class="brand-label">Qhatu Cacao &amp; Co. — Desde 2026</span>
+  <h1>El arte de<br>hacer <em>chocolate</em></h1>
+  <span class="scroll-hint">↓ &nbsp; Desliza para descubrir</span>
+</section>
+
+<div class="scroll-track">
+  <div class="scene-wrapper" id="sceneWrapper">
+    <div class="scene">
+      <div class="bar-container" id="bar">
+
+        <!-- FRONT -->
+        <div class="bar-face bar-front">
+          <div class="flare"></div>
+          <div class="square"></div><div class="square"></div><div class="square"></div><div class="square"></div><div class="square"></div>
+          <div class="square"></div><div class="square"></div><div class="square"></div><div class="square"></div><div class="square"></div>
+          <div class="square"></div><div class="square"></div><div class="square"></div><div class="square"></div><div class="square"></div>
+          <div class="square"></div><div class="square"></div><div class="square"></div><div class="square"></div><div class="square"></div>
+        </div>
+
+        <!-- BACK — Organigrama -->
+        <div class="bar-face bar-back">
+          <div class="org-tree">
+
+            <!-- N1: Gerente General -->
+            <div class="dept-row">
+              <div class="org-node n1">
+                <span class="role">Gerente General</span>
+                <span class="name">Dângelo</span>
+              </div>
+            </div>
+            <div class="v-line"></div>
+
+            <!-- N2: Sub Gerente -->
+            <div class="dept-row">
+              <div class="org-node n2">
+                <span class="role">Sub Gerente</span>
+                <span class="name">Emerson</span>
+              </div>
+            </div>
+
+            <!-- Top horizontal bar connecting 6 depts -->
+            <div class="top-hbar" id="topHbar"></div>
+
+            <!-- N3: 6 Departamentos -->
+            <div class="dept-row" id="deptRow">
+
+              <!-- WILY: ADMINISTRACIÓN -->
+              <div class="dept-col">
+                <div class="org-node n3">
+                  <span class="role">Administración</span>
+                  <span class="name">Wily</span>
+                </div>
+                <div class="v-line"></div>
+                <div class="org-node n4">
+                  <span class="role">Almacén y Archivos</span>
+                  <span class="name u">—</span>
+                </div>
+                <div class="v-line"></div>
+                <div class="org-node n4">
+                  <span class="role">Asistente</span>
+                  <span class="name u">—</span>
+                </div>
+              </div>
+
+              <!-- PRADO: MERCADOTECNIA -->
+              <div class="dept-col">
+                <div class="org-node n3">
+                  <span class="role">Mercadotecnia</span>
+                  <span class="name">Prado</span>
+                </div>
+                <div class="split2"><div class="tick-r"></div></div>
+                <div class="children2">
+                  <div class="org-node n4">
+                    <span class="role">Ventas</span>
+                    <span class="name u">—</span>
+                  </div>
+                  <div class="org-node n4">
+                    <span class="role">Distribuidor</span>
+                    <span class="name u">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DAVID: SISTEMAS -->
+              <div class="dept-col">
+                <div class="org-node n3">
+                  <span class="role">Sistemas</span>
+                  <span class="name">David</span>
+                </div>
+                <div class="v-line"></div>
+                <div class="org-node n4">
+                  <span class="role">Marketing Digital</span>
+                  <span class="name u">—</span>
+                </div>
+              </div>
+
+              <!-- ROBERTO: FINANZAS -->
+              <div class="dept-col">
+                <div class="org-node n3">
+                  <span class="role">Finanzas</span>
+                  <span class="name">Roberto</span>
+                </div>
+                <div class="split2"><div class="tick-r"></div></div>
+                <div class="children2">
+                  <div class="org-node n4">
+                    <span class="role">Asistente Contador</span>
+                    <span class="name u">—</span>
+                  </div>
+                  <div class="org-node n4">
+                    <span class="role">Asistente Economista</span>
+                    <span class="name u">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- FERNANDO: RRHH -->
+              <div class="dept-col">
+                <div class="org-node n3">
+                  <span class="role">RRHH</span>
+                  <span class="name">Fernando</span>
+                </div>
+                <div class="split2"><div class="tick-r"></div></div>
+                <div class="children2">
+                  <div class="org-node n4">
+                    <span class="role">Psicólogo</span>
+                    <span class="name u">—</span>
+                  </div>
+                  <div class="org-node n4">
+                    <span class="role">Logística</span>
+                    <span class="name u">—</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- MICHAEL: JEFE DE PRODUCCIÓN -->
+              <div class="dept-col">
+                <div class="org-node n3">
+                  <span class="role">Jefe de Producción</span>
+                  <span class="name">Michael</span>
+                </div>
+                <div class="split2"><div class="tick-r"></div></div>
+                <div class="children2">
+                  <div class="org-node n4">
+                    <span class="role">Catador</span>
+                    <span class="name u">—</span>
+                  </div>
+                  <div class="org-node n4">
+                    <span class="role">Control de Calidad</span>
+                    <span class="name u">—</span>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /dept-row -->
+          </div><!-- /org-tree -->
+        </div><!-- /bar-back -->
+
+        <div class="bar-top"></div>
+        <div class="bar-bottom"></div>
+      </div>
+    </div>
+
+    <div class="info-strip" id="infoStrip">
+      <span>Gerente: <strong>Dângelo</strong></span>
+      <span>·</span>
+      <span>Sub Gerente: <strong>Emerson</strong></span>
+      <span>·</span>
+      <span>Áreas: <strong>6</strong></span>
+    </div>
+  </div>
+</div>
+
+<section class="about-text" id="aboutText">
+  <p>Nacimos de una pasión: transformar el <em>cacao fino de origen</em> en experiencias que perduran. Cada tableta que sale de nuestra fábrica lleva consigo décadas de oficio, errores transformados en recetas y el calor de un equipo que cree en lo artesanal.</p>
+  <p>Bajo la dirección de <em>Dângelo</em> y el liderazgo operativo de <em>Emerson</em>, nuestras seis áreas — Administración, Mercadotecnia, Sistemas, Finanzas, RRHH y Producción — trabajan en perfecta sintonía para que cada tableta sea un momento único.</p>
+  <p>No hacemos chocolate en masa. <em>Hacemos momentos.</em></p>
+</section>
+
+<!-- ══════════════════════════════════════
+     MOF — Manual de Organización y Funciones
+     ══════════════════════════════════════ -->
+<section class="mof-section">
+
+  <div class="mof-header" data-reveal>
+    <span class="eyebrow">Qhatu Cacao · Alta Chocolatería</span>
+    <h2>Manual de <em>Organización</em><br>y Funciones</h2>
+    <span class="subtitle">Descripción de puestos, misiones y responsabilidades</span>
+    <div class="mof-divider"></div>
+  </div>
+
+  <div class="mof-grid">
+
+    <!-- FEATURED: D'Angelo + Emerson -->
+    <div class="mof-card featured" data-reveal data-delay="0">
+      <div class="mof-card-left">
+        <span class="mof-card-number">01</span>
+        <span class="mof-card-name">D'Angelo</span>
+        <span class="mof-card-role">Gerente General</span>
+        <p class="mof-card-mission">Liderar la visión estratégica de Qhatu Cacao, asegurando el crecimiento sostenible y la identidad de la marca.</p>
+        <span class="mof-card-functions-title">Funciones Principales</span>
+        <ul class="mof-card-functions">
+          <li>Representar legalmente a la empresa ante bancos, SUNAT e inversionistas.</li>
+          <li>Aprobar el Plan Estratégico Anual y los presupuestos presentados por Finanzas.</li>
+          <li>Tomar decisiones finales sobre expansión de mercado y nuevas líneas de productos.</li>
+          <li>Firmar alianzas con proveedores de cacao de origen, garantizando la trazabilidad.</li>
+        </ul>
+      </div>
+      <div class="mof-card-right">
+        <span class="mof-card-number">02</span>
+        <span class="mof-card-name">Emerson</span>
+        <span class="mof-card-role">Subgerente</span>
+        <p class="mof-card-mission">Garantizar la operatividad diaria de la empresa y servir de enlace entre la Gerencia General y las jefaturas de área.</p>
+        <span class="mof-card-functions-title">Funciones Principales</span>
+        <ul class="mof-card-functions">
+          <li>Reemplazar al Gerente General en su ausencia con plenas facultades.</li>
+          <li>Supervisar el cumplimiento de los objetivos de cada jefatura.</li>
+          <li>Resolver conflictos operativos entre áreas.</li>
+          <li>Monitorear los indicadores de gestión (KPIs) y reportarlos a D'Angelo.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- WILY -->
+    <div class="mof-card" data-reveal data-delay="100">
+      <span class="mof-card-number">03</span>
+      <span class="mof-card-name">Wily</span>
+      <span class="mof-card-role">Jefe de Administración</span>
+      <p class="mof-card-mission">Gestionar eficientemente los recursos materiales y logísticos de la empresa.</p>
+      <span class="mof-card-functions-title">Funciones Principales</span>
+      <ul class="mof-card-functions">
+        <li>Gestionar la adquisición de materia prima (cacao, azúcar, manteca) y envases.</li>
+        <li>Velar por el mantenimiento de la infraestructura de la fábrica y oficinas.</li>
+        <li>Controlar el Kardex de insumos y suministros.</li>
+        <li>Tramitar licencias municipales, permisos de funcionamiento y certificaciones sanitarias (DIGESA).</li>
+      </ul>
+    </div>
+
+    <!-- ROBERTO -->
+    <div class="mof-card" data-reveal data-delay="150">
+      <span class="mof-card-number">04</span>
+      <span class="mof-card-name">Roberto</span>
+      <span class="mof-card-role">Jefe de Finanzas</span>
+      <p class="mof-card-mission">Asegurar la salud económica de la empresa, gestionando la liquidez y la rentabilidad.</p>
+      <span class="mof-card-functions-title">Funciones Principales</span>
+      <ul class="mof-card-functions">
+        <li>Supervisar los libros contables y determinar el costo de producción por barra.</li>
+        <li>Gestionar el flujo de caja, cuentas por pagar y cuentas por cobrar.</li>
+        <li>Asegurar la correcta declaración y pago de tributos mensuales y anuales.</li>
+        <li>Elaborar los Estados Financieros para la toma de decisiones de la Gerencia.</li>
+      </ul>
+    </div>
+
+    <!-- FERNANDO -->
+    <div class="mof-card" data-reveal data-delay="200">
+      <span class="mof-card-number">05</span>
+      <span class="mof-card-name">Fernando</span>
+      <span class="mof-card-role">Jefe de Recursos Humanos</span>
+      <p class="mof-card-mission">Gestionar el talento humano, garantizando un clima laboral óptimo y personal altamente capacitado.</p>
+      <span class="mof-card-functions-title">Funciones Principales</span>
+      <ul class="mof-card-functions">
+        <li>Seleccionar personal idóneo, especialmente operarios con habilidades en chocolatería.</li>
+        <li>Organizar entrenamientos en Buenas Prácticas de Manufactura (BPM) e Higiene.</li>
+        <li>Elaborar la nómina de pagos, beneficios sociales y control de asistencia.</li>
+        <li>Hacer cumplir el Reglamento Interno de Trabajo (RIT) y aplicar sanciones disciplinarias.</li>
+      </ul>
+    </div>
+
+    <!-- DAVID -->
+    <div class="mof-card" data-reveal data-delay="250">
+      <span class="mof-card-number">06</span>
+      <span class="mof-card-name">David</span>
+      <span class="mof-card-role">Jefe de Sistemas (TI)</span>
+      <p class="mof-card-mission">Garantizar el soporte tecnológico y la seguridad de la información de la empresa.</p>
+      <span class="mof-card-functions-title">Funciones Principales</span>
+      <ul class="mof-card-functions">
+        <li>Mantener operativos los equipos informáticos y redes de la empresa.</li>
+        <li>Proteger la base de datos de clientes y las recetas secretas (Ciberseguridad).</li>
+        <li>Administrar y mantener actualizada la página web y tienda virtual de Qhatu Cacao.</li>
+        <li>Implementar software de gestión (ERP) para integrar Producción con Finanzas.</li>
+      </ul>
+    </div>
+
+    <!-- MICHAEL -->
+    <div class="mof-card" data-reveal data-delay="300">
+      <span class="mof-card-number">07</span>
+      <span class="mof-card-name">Michael</span>
+      <span class="mof-card-role">Jefe de Producción</span>
+      <p class="mof-card-mission">Dirigir el proceso de transformación del cacao, asegurando la máxima calidad ("Alta Chocolatería") y eficiencia.</p>
+      <span class="mof-card-functions-title">Funciones Principales</span>
+      <ul class="mof-card-functions">
+        <li>Programar la producción diaria según los pedidos de Ventas.</li>
+        <li>Supervisar el tostado, refinado y temperado para asegurar el brillo y sabor perfecto.</li>
+        <li>Velar por el correcto funcionamiento de la maquinaria (refinadoras, hornos, temperadoras).</li>
+        <li>Garantizar la inocuidad alimentaria y el cumplimiento de normas de higiene en planta.</li>
+      </ul>
+    </div>
+
+    <!-- PRADO -->
+    <div class="mof-card" data-reveal data-delay="350">
+      <span class="mof-card-number">08</span>
+      <span class="mof-card-name">Prado</span>
+      <span class="mof-card-role">Jefe de Mercadotecnia</span>
+      <p class="mof-card-mission">Posicionar la marca Qhatu Cacao en la mente del consumidor y diseñar estrategias para incrementar las ventas.</p>
+      <span class="mof-card-functions-title">Funciones Principales</span>
+      <ul class="mof-card-functions">
+        <li>Gestionar la imagen de marca, diseño de empaques y material publicitario.</li>
+        <li>Crear contenido en redes sociales que transmita los valores de Origen y Cultura.</li>
+        <li>Analizar a la competencia y detectar nuevas tendencias en chocolatería.</li>
+        <li>Diseñar campañas promocionales (Día de la Madre, Navidad, San Valentín).</li>
+      </ul>
+    </div>
+
+  </div><!-- /mof-grid -->
+</section>
+
+<script>
+  const bar = document.getElementById('bar');
+  const scrollTrack = document.querySelector('.scroll-track');
+  const infoStrip = document.getElementById('infoStrip');
+  const aboutText = document.getElementById('aboutText');
+
+  let currentRotation = 0;
+  let targetRotation = 0;
+  let infoShown = false;
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  (function animate() {
+    currentRotation = lerp(currentRotation, targetRotation, 0.07);
+    const r = Math.max(0, Math.min(180, currentRotation));
+    bar.style.transform = `rotateX(${r}deg)`;
+    if (r > 95 && !infoShown)       { infoStrip.classList.add('visible');    infoShown = true; }
+    else if (r < 80 && infoShown)   { infoStrip.classList.remove('visible'); infoShown = false; }
+    requestAnimationFrame(animate);
+  })();
+
+  new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.2 }).observe(aboutText);
+
+  // MOF reveal with staggered delays
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const delay = parseInt(e.target.dataset.delay || 0);
+        setTimeout(() => e.target.classList.add('visible'), delay);
+        revealObserver.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
+
+  window.addEventListener('scroll', () => {
+    const rect = scrollTrack.getBoundingClientRect();
+    const trackH = scrollTrack.offsetHeight - window.innerHeight;
+    targetRotation = Math.max(0, Math.min(1, -rect.top / trackH)) * 180;
+  }, { passive: true });
+</script>
+</body>
+</html>
